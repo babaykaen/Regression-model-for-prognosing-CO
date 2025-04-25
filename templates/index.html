@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогнозирование уровня CO в воздухе</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Прогнозирование уровня CO в воздухе</h1>
+        
+        <p><a href="{{ url_for('model_stats') }}">Просмотреть статистику модели →</a></p>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST">
+            <h2>Введите параметры:</h2>
+            
+            {% if features %}
+                {% for feature in features %}
+                    <div>
+                        <label for="{{ feature }}">{{ feature }}:</label>
+                        <input type="text" id="{{ feature }}" name="{{ feature }}" 
+                               value="{{ input_values.get(feature, '') }}">
+                    </div>
+                {% endfor %}
+                <button type="submit">Рассчитать CO</button>
+            {% else %}
+                <p>Невозможно загрузить параметры модели.</p>
+            {% endif %}
+        </form>
+        
+        {% if prediction is not none %}
+            <div class="results">
+                <h2>Результат прогноза:</h2>
+                <p>Прогнозируемый уровень CO: <strong>{{ prediction|round(4) }}</strong></p>
+                
+                <h3>Введённые значения:</h3>
+                <ul>
+                    {% for feature, value in input_values.items() %}
+                        <li>{{ feature }}: {{ value }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+    <div class="cloud-decoration"></div>
+</body>
+</html>

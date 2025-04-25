@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика модели CO</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Статистика модели прогнозирования CO</h1>
+        
+        <p><a href="{{ url_for('index') }}">← Вернуться к форме прогнозирования</a></p>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <section>
+            <h2>Метрики качества модели</h2>
+            <ul>
+                {% for metric, value in metrics.items() %}
+                    <li><strong>{{ metric }}:</strong> {{ value }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+        
+        <section>
+            <h2>Корреляционная матрица</h2>
+            <img src="{{ url_for('static', filename='correlation_matrix.png') }}" alt="Корреляционная матрица">
+        </section>
+        
+        <section>
+            <h2>Распределение остатков</h2>
+            <img src="{{ url_for('static', filename='residuals_distribution.png') }}" alt="Распределение остатков">
+        </section>
+        
+        <section>
+            <h2>Рассеяние прогнозов</h2>
+            <img src="{{ url_for('static', filename='prediction_scatter.png') }}" alt="График рассеяния">
+        </section>
+        
+    </div>
+    <div class="cloud-decoration"></div>
+</body>
+</html>
